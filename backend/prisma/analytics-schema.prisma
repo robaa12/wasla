@@ -1,0 +1,47 @@
+generator client {
+    provider = "prisma-client-js"
+    output   = "../src/generated/analytics-client" // separate generated client
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+// Raw click events — batch inserted by the background worker
+model ClickEvent {
+    id      String @id @default(cuid())
+    shortId String // references ShortUrl.id (cross-DB, no FK)
+
+    // Request metadata
+    ip        String?
+    userAgent String?
+    referrer  String?
+
+    // Enriched by worker
+    browser String? // e.g. "Chrome", "Firefox"
+    os      String? // e.g. "Windows", "macOS"
+    device  String? // e.g. "Desktop", "Mobile"
+    country String? // e.g. "EG", "US"
+    city    String?
+
+    timestamp DateTime @default(now())
+
+    @@index([shortId])
+    @@index([shortId, timestamp]) // for time-series queries
+    @@index([country])
+    @@index([timestamp])
+    @@map("click_events")
+}
+
+// Pre-aggregated stats — updated by worker for fast dashboard queries
+model ClickAggregate {
+    id      String   @id @default(cuid())
+    shortId String
+    date    DateTime @db.Date // truncated to day
+
+    totalClicks Int @default(0)
+
+    @@unique([shortId, date]) // one row per link per day
+    @@index([shortId])
+    @@map("click_aggregates")
+}
