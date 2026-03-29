@@ -1,7 +1,8 @@
 import "dotenv/config";
 import express from "express";
 import { getSharedClientByIndex,getPrismaClientForShortId,resolveShardFromShortId } from "./config/shards";
-import { ok } from "node:assert";
+import { connectRedis } from "./config/redis";
+
 
 const app = express();
 app.use(express.json());
@@ -15,6 +16,17 @@ app.get("/health", async (_req, res) => {
 });
 
 const port = Number(process.env.PORT) || 3000;
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+
+async function bootstrap() {
+    // 1. Wait for Redis to connect before starting the web server
+    await connectRedis();
+    // 2. Start listening to web HTTP requests
+    app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+    });
+}
+
+bootstrap().catch(err => {
+    console.error("Failed to start server", err);
+    process.exit(1);
 });
