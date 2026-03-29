@@ -84,3 +84,4 @@ frontend/dist/
 frontend/.angular/
 plan-wasla.prompt.md
 tasks-wasla.md
+backend/src/generated/
