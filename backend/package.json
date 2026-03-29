@@ -1,0 +1,37 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --exec ts-node src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate:shards": "prisma migrate dev --name init_shard_schema",
+    "prisma:validate:shards": "prisma validate",
+    "prisma:generate:analytics": "prisma generate --config prisma.analytics.config.ts",
+    "prisma:migrate:analytics": "prisma migrate dev --config prisma.analytics.config.ts --name init_analytics_schema",
+    "prisma:validate:analytics": "prisma validate --config prisma.analytics.config.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.5.0",
+    "nodemon": "^3.1.14",
+    "prisma": "^7.6.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.2"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.6.0",
+    "@prisma/client": "^7.6.0",
+    "express": "^5.2.1",
+    "nanoid": "^5.1.7",
+    "pg": "^8.20.0",
+    "redis": "^5.11.0"
+  }
+}
