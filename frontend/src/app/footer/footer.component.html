@@ -1,0 +1,38 @@
+<footer class="footer-section px-6 py-12">
+  <div class="mx-auto max-w-7xl">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="/wasla logo with text.png" alt="Wasla" class="h-24 w-auto object-contain opacity-80 mb-3" />
+        <p class="footer-tagline">{{ t.footerTagline }}</p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4 class="footer-col-title">Product</h4>
+          <button (click)="sectionScrolled.emit('features')" class="footer-link">{{ t.navFeatures }}</button>
+          <button (click)="sectionScrolled.emit('how-it-works')" class="footer-link">{{ t.navHowItWorks }}</button>
+          <button (click)="sectionScrolled.emit('stats')" class="footer-link">{{ t.navAnalytics }}</button>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">Developers</h4>
+          <a class="footer-link" href="#">API Docs</a>
+          <a class="footer-link" href="#">Open Source</a>
+          <a class="footer-link" href="#">Status</a>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-col-title">Company</h4>
+          <a class="footer-link" href="#">About</a>
+          <a class="footer-link" href="#">Privacy</a>
+          <a class="footer-link" href="#">Terms</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">{{ t.footer }}</p>
+      <div class="footer-lang">
+        <button (click)="languageToggled.emit()" class="footer-lang-btn">{{ t.langToggle }}</button>
+      </div>
+    </div>
+  </div>
+</footer>

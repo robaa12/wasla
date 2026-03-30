@@ -1,3 +1,80 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+@plugin 'daisyui';
+
+/* ─── Design Tokens ─────────────────────────────────────────── */
+@theme {
+  /* Wasla Teal */
+  --color-teal-50: #e8f5f3;
+  --color-teal-100: #c5e8e3;
+  --color-teal-200: #a8d9d3;
+  --color-teal-300: #7cc4bc;
+  --color-teal-400: #5e9e97;
+  --color-teal-500: #3d7d76;
+  --color-teal-700: #1b5e52;
+  --color-teal-900: #0d3b33;
+
+  /* Wasla Amber */
+  --color-amber-50: #fef3dc;
+  --color-amber-100: #fde5b0;
+  --color-amber-200: #f9cc80;
+  --color-amber-400: #f7b738;
+  --color-amber-500: #f5a623;
+  --color-amber-700: #b8760f;
+  --color-amber-900: #7a4d08;
+
+  /* Purple accent */
+  --color-purple-400: #a78bfa;
+  --color-purple-500: #8b5cf6;
+  --color-purple-700: #6d28d9;
+
+  /* Neutrals */
+  --color-neutral-50: #f4f7f6;
+  --color-neutral-100: #e2e8e7;
+  --color-neutral-200: #c5d0ce;
+  --color-neutral-400: #93a9a6;
+  --color-neutral-500: #6b8580;
+  --color-neutral-700: #3d5a56;
+  --color-neutral-900: #1c2b29;
+
+  /* Dark semantic tokens */
+  --color-dark-base: #080f0e;
+  --color-dark-surface: #111a18;
+  --color-dark-raised: #192420;
+  --color-dark-overlay: #0d3b33;
+  --color-dark-border: #1e3330;
+
+  /* Typography */
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-arabic: 'Cairo', sans-serif;
+}
+
+/* ─── Dark mode ─────────────────────────────────────────────── */
+@variant dark (&:where(.dark, .dark *));
+
+/* ─── Global base ───────────────────────────────────────────── */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    @apply bg-dark-base text-neutral-50 font-sans antialiased;
+    color-scheme: dark;
+  }
+
+  html[dir='rtl'] body { font-family: var(--font-arabic); }
+  html[dir='ltr'] body { font-family: var(--font-sans); }
+}
+
+/* ─── Global keyframes ──────────────────────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes drift-slow {
+  from { transform: translateY(0) scale(1); }
+  to   { transform: translateY(-30px) scale(1.06); }
+}
+
+.animate-fade-up { animation: fade-up 0.7s ease both; }

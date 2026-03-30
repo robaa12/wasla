@@ -1,0 +1,32 @@
+@reference "../../styles.css";
+.stats-section {
+  border-top: 1px solid var(--color-dark-border);
+  border-bottom: 1px solid var(--color-dark-border);
+  background: var(--color-dark-surface);
+}
+
+.stats-grid {
+  @apply grid grid-cols-2 gap-0 md:grid-cols-4;
+}
+
+.stat-card {
+  @apply flex flex-col items-center justify-center gap-2 py-8 px-4 text-center;
+}
+
+.stat-value {
+  @apply font-extrabold text-neutral-50;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  background: linear-gradient(135deg, var(--color-teal-200), var(--color-amber-400));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-label {
+  @apply text-sm font-semibold text-neutral-500 uppercase tracking-widest;
+}
+
+.stat-divider {
+  @apply hidden md:block w-px self-stretch my-6;
+  background: var(--color-dark-border);
+}

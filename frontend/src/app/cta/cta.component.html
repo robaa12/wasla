@@ -1,0 +1,17 @@
+<section class="cta-section px-4 py-20">
+  <div class="mx-auto max-w-4xl">
+    <div class="cta-card">
+      <div class="cta-glow"></div>
+      <div class="relative z-10 text-center">
+        <h2 class="cta-title">{{ t.ctaTitle }}</h2>
+        <p class="cta-subtitle">{{ t.ctaSubtitle }}</p>
+        <button id="cta-main-btn" class="cta-button" (click)="sectionScrolled.emit('hero')">
+          {{ t.ctaButton }}
+          <svg class="inline-block h-5 w-5 ms-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

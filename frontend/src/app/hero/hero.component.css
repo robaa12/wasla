@@ -1,0 +1,203 @@
+@reference "../../styles.css";
+
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(27, 94, 82, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(27, 94, 82, 0.06) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
+}
+
+.orb {
+  position: fixed;
+  border-radius: 9999px;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(100px);
+  will-change: transform;
+}
+
+.orb-teal {
+  width: 70vw; height: 70vw;
+  max-width: 700px; max-height: 700px;
+  top: -15%; left: 50%;
+  translate: -50% 0;
+  background: radial-gradient(circle, rgba(27, 94, 82, 0.45) 0%, transparent 70%);
+  animation: drift-slow 18s ease-in-out infinite alternate;
+}
+
+.orb-amber {
+  width: 40vw; height: 40vw;
+  max-width: 400px; max-height: 400px;
+  top: 10%; right: -8%;
+  background: radial-gradient(circle, rgba(245, 166, 35, 0.2) 0%, transparent 70%);
+  animation: drift-slow 14s ease-in-out 2s infinite alternate-reverse;
+}
+
+.orb-purple {
+  width: 35vw; height: 35vw;
+  max-width: 350px; max-height: 350px;
+  bottom: 5%; left: -5%;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.18) 0%, transparent 70%);
+  animation: drift-slow 20s ease-in-out 4s infinite alternate;
+}
+
+/* ─── Badge ─── */
+.badge-live {
+  @apply gap-2 rounded-full border border-teal-700/60 bg-dark-surface/70 px-4 py-2 text-sm font-bold text-teal-200;
+  backdrop-filter: blur(8px);
+  animation: fade-up 0.6s ease both;
+}
+
+.ping-dot  { @apply relative flex h-2.5 w-2.5; }
+.ping-inner { @apply absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75; }
+.ping-core  { @apply relative inline-flex h-2.5 w-2.5 rounded-full bg-amber-500; }
+
+/* ─── Hero text ─── */
+.hero-heading {
+  @apply font-extrabold leading-tight tracking-tight text-neutral-50;
+  font-size: clamp(2.5rem, 7vw, 4.5rem);
+  animation: fade-up 0.7s 0.1s ease both;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-amber-400) 0%, var(--color-amber-200) 60%, var(--color-teal-200) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtext {
+  @apply text-lg font-medium text-neutral-400 md:text-xl;
+  animation: fade-up 0.7s 0.2s ease both;
+}
+
+/* ─── Shortener card ─── */
+.shortener-card {
+  @apply rounded-2xl p-1;
+  background: linear-gradient(135deg, rgba(27, 94, 82, 0.3), rgba(245, 166, 35, 0.1), rgba(139, 92, 246, 0.1));
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  animation: fade-up 0.7s 0.3s ease both;
+}
+
+.shortener-card > form {
+  @apply rounded-xl bg-dark-surface p-4;
+}
+
+.input-wrapper {
+  @apply flex flex-1 items-center gap-2 rounded-xl px-4;
+  background: var(--color-dark-raised);
+  border: 1px solid var(--color-dark-border);
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus-within {
+    border-color: var(--color-teal-700);
+    box-shadow: 0 0 0 3px rgba(27, 94, 82, 0.2);
+  }
+}
+
+.input-icon { @apply text-lg select-none; }
+
+.url-input {
+  @apply flex-1 bg-transparent py-3 text-base text-neutral-50 outline-none;
+
+  &::placeholder {
+    color: var(--color-neutral-500);
+  }
+}
+
+.shorten-btn {
+  @apply flex shrink-0 items-center gap-2 rounded-xl px-6 py-3 text-base font-extrabold text-dark-base transition-all;
+  background: linear-gradient(135deg, var(--color-amber-500), var(--color-amber-400));
+  box-shadow: 0 2px 16px rgba(245, 166, 35, 0.35);
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--color-amber-400), var(--color-amber-200));
+    box-shadow: 0 4px 24px rgba(245, 166, 35, 0.5);
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    @apply opacity-60 cursor-not-allowed;
+  }
+}
+
+.btn-arrow {
+  @apply h-4 w-4 transition-transform;
+}
+
+.shorten-btn:hover .btn-arrow {
+  transform: translateX(3px);
+}
+
+html[dir='rtl'] .btn-arrow {
+  transform: scaleX(-1);
+}
+
+.spinner {
+  @apply inline-block h-4 w-4 rounded-full border-2 border-dark-base border-t-transparent animate-spin;
+}
+
+/* ─── Error / Success ─── */
+.error-banner {
+  @apply mt-4 flex items-start gap-3 rounded-xl border border-red-800/60 bg-red-950/30 p-4 mx-4 mb-4 text-left text-red-300;
+}
+
+.success-banner {
+  @apply flex flex-col items-start justify-between gap-4 rounded-xl border border-teal-700/60 bg-dark-overlay/40 p-5 mx-4 mb-4;
+  animation: fade-up 0.4s ease both;
+
+  @media (min-width: 640px) {
+    @apply flex-row items-center;
+  }
+}
+
+.success-left  { @apply flex-1 overflow-hidden; }
+
+.success-label {
+  @apply mb-1 flex items-center gap-2 text-sm font-bold text-teal-300;
+}
+
+.short-link {
+  @apply block truncate text-xl font-extrabold text-neutral-50 transition-colors hover:text-amber-300;
+}
+
+.copy-btn {
+  @apply flex shrink-0 items-center gap-2 rounded-xl border border-dark-border bg-dark-raised px-5 py-2.5 text-sm font-bold text-neutral-200 transition-all;
+
+  &:hover {
+    @apply border-teal-700 text-teal-200;
+  }
+
+  &.copied {
+    @apply border-teal-700 bg-teal-700/20 text-teal-300;
+  }
+}
+
+/* ─── Scroll indicator ─── */
+.scroll-indicator {
+  animation: bounce-gentle 2s ease-in-out infinite;
+}
+
+.scroll-mouse {
+  @apply w-6 h-10 rounded-full border-2 border-neutral-600 flex items-start justify-center p-1.5;
+}
+
+.scroll-wheel {
+  @apply w-1.5 h-3 rounded-full bg-neutral-500;
+  animation: scroll-wheel 2s ease-in-out infinite;
+}
+
+@keyframes scroll-wheel {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50%       { transform: translateY(8px); opacity: 0.3; }
+}
+
+@keyframes bounce-gentle {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(6px); }
+}

@@ -1,0 +1,113 @@
+<section id="hero"
+  class="hero-section relative flex min-h-screen flex-col items-center justify-center px-4 pt-20 pb-16">
+
+  <!-- Animated grid background -->
+  <div class="grid-bg absolute inset-0 -z-10"></div>
+
+  <!-- Glow orbs -->
+  <div class="orb orb-teal"></div>
+  <div class="orb orb-amber"></div>
+  <div class="orb orb-purple"></div>
+
+  <div class="mx-auto max-w-4xl text-center animate-fade-up">
+
+    <!-- Live badge -->
+    <div class="badge-live mb-8 inline-flex items-center">
+      <span class="ping-dot">
+        <span class="ping-inner"></span>
+        <span class="ping-core"></span>
+      </span>
+      {{ t.badge }}
+    </div>
+
+    <!-- Heading -->
+    <h1 class="hero-heading mb-6">
+      {{ t.headingLine1 }}<br />
+      <span class="text-gradient">{{ t.headingLine2 }}</span>
+    </h1>
+
+    <p class="hero-subtext mb-12 mx-auto max-w-2xl">{{ t.subheading }}</p>
+
+    <!-- URL Shortener Card -->
+    <div id="shortener" class="shortener-card mx-auto w-full max-w-3xl">
+      <form (ngSubmit)="shorten.emit()" novalidate class="flex flex-col gap-3 sm:flex-row">
+        <div class="input-wrapper flex-1">
+          <span class="input-icon">🔗</span>
+          <input id="url-input" type="url" name="longUrl"
+            [ngModel]="longUrl" (ngModelChange)="longUrlChange.emit($event)"
+            [placeholder]="t.placeholder" class="url-input" autocomplete="url" />
+        </div>
+        <button id="shorten-btn" type="submit" [disabled]="isLoading" class="shorten-btn"
+          [class.btn-loading]="isLoading">
+          @if (isLoading) {
+            <span class="spinner"></span>
+            {{ t.loading }}
+          } @else {
+            {{ t.cta }}
+            <svg class="btn-arrow" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                clip-rule="evenodd" />
+            </svg>
+          }
+        </button>
+      </form>
+
+      <!-- Error -->
+      @if (errorMessage) {
+        <div class="error-banner mt-4">
+          <svg class="h-5 w-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p class="font-semibold">{{ errorMessage }}</p>
+        </div>
+      }
+
+      <!-- Success -->
+      @if (shortenedData) {
+        <div class="success-banner mt-4">
+          <div class="success-left">
+            <p class="success-label">
+              <svg class="h-4 w-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+              </svg>
+              {{ t.successTitle }}
+            </p>
+            <a [href]="'http://localhost:3000/' + shortenedData.shortId" target="_blank" rel="noopener"
+              class="short-link">
+              wasla.io/{{ shortenedData.shortId }}
+            </a>
+          </div>
+          <button id="copy-btn" (click)="copy.emit(shortenedData.shortId)" class="copy-btn"
+            [class.copied]="showCopiedToast">
+            @if (showCopiedToast) {
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+              </svg>
+              {{ t.copyDone }}
+            } @else {
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              {{ t.copy }}
+            }
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- Trust text -->
+    <p class="mt-6 text-sm text-neutral-500">
+      No sign-up required &nbsp;·&nbsp; Free forever &nbsp;·&nbsp; 99.99% uptime
+    </p>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="scroll-indicator absolute bottom-8 left-1/2 -translate-x-1/2">
+    <div class="scroll-mouse">
+      <div class="scroll-wheel"></div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,89 @@
+@reference "../../styles.css";
+
+.how-section {
+  overflow: hidden;
+}
+
+/* ─── Section header (shared pattern) ─── */
+.section-glow {
+  position: absolute;
+  width: 600px; height: 400px;
+  border-radius: 9999px;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(120px);
+}
+
+.section-glow-amber {
+  background: radial-gradient(circle, rgba(245, 166, 35, 0.15), transparent 70%);
+  bottom: -10%; right: -10%;
+}
+
+.section-eyebrow {
+  @apply mb-3 inline-block rounded-full border border-teal-700/60 bg-dark-surface px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-teal-300;
+}
+
+.section-title {
+  @apply mb-4 font-extrabold tracking-tight text-neutral-50;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+.section-subtitle {
+  @apply text-base text-neutral-400 mx-auto max-w-2xl leading-relaxed md:text-lg;
+}
+
+.section-header {
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── Steps ─── */
+.steps-container {
+  @apply relative z-10 flex flex-col gap-6;
+
+  @media (min-width: 768px) {
+    @apply flex-row;
+  }
+}
+
+.step-card {
+  @apply relative flex flex-col gap-6 p-8 rounded-2xl flex-1;
+  background: var(--color-dark-surface);
+  border: 1px solid var(--color-dark-border);
+  transition: border-color 0.3s, box-shadow 0.3s;
+
+  &:hover {
+    border-color: rgba(27, 94, 82, 0.35);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.step-number {
+  @apply text-5xl font-extrabold leading-none;
+  background: linear-gradient(135deg, var(--color-dark-raised), var(--color-dark-border));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.step-content {
+  @apply flex items-start gap-4;
+}
+
+.step-icon-wrap {
+  @apply flex h-12 w-12 shrink-0 items-center justify-center rounded-xl;
+  background: rgba(27, 94, 82, 0.25);
+}
+
+.step-icon-amber  { background: rgba(245, 166, 35, 0.15); }
+.step-icon-purple { background: rgba(139, 92, 246, 0.15); }
+
+.step-icon { @apply h-6 w-6; stroke: var(--color-teal-200); }
+
+.step-icon-amber  .step-icon  { stroke: var(--color-amber-400); }
+.step-icon-purple .step-icon  { stroke: var(--color-purple-400); }
+
+.step-title { @apply mb-1.5 text-base font-bold text-neutral-50; }
+.step-desc  { @apply text-sm leading-relaxed text-neutral-400; }
+
+.step-connector { display: none; }
