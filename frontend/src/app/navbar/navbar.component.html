@@ -18,8 +18,13 @@
     <!-- Actions -->
     <div class="flex items-center gap-2">
       <button (click)="languageToggled.emit()" class="nav-lang-btn">{{ t.langToggle }}</button>
+      @if (!auth.isAuthenticated()) {
       <a class="btn-ghost-teal" routerLink="/login">{{ t.login }}</a>
-      <button class="btn-primary-amber" (click)="shortenerScrolled.emit()">{{ t.signup }}</button>
+      <a class="btn-primary-amber" routerLink="/register">{{ t.signup }}</a>
+      } @else {
+      <a class="btn-ghost-teal" routerLink="/dashboard">Dashboard</a>
+      <button class="btn-primary-amber" (click)="logout()">Sign Out</button>
+      }
     </div>
 
   </nav>

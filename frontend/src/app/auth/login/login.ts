@@ -1,28 +1,38 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../core/auth/auth';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class Login {
+export class Login implements OnInit {
   private auth = inject(Auth);
   private router = inject(Router);
 
   email = '';
   password = '';
-  isRegisterMode = signal(false); // Toggle between Login and Register
+  isRegisterMode = signal(false);
   isLoading = signal(false);
   errorMessage = signal('');
 
+  ngOnInit() {
+    // Auto-start in register mode when the URL is /register
+    if (this.router.url.startsWith('/register')) {
+      this.isRegisterMode.set(true);
+    }
+  }
+
   toggleMode() {
-    this.isRegisterMode.set(!this.isRegisterMode());
+    const next = !this.isRegisterMode();
+    this.isRegisterMode.set(next);
     this.errorMessage.set('');
+    // Keep the URL in sync with the mode
+    this.router.navigate([next ? '/register' : '/login']);
   }
 
   async onSubmit() {
