@@ -1,18 +1,30 @@
 import "dotenv/config";
 import express from "express";
-import { getSharedClientByIndex,getPrismaClientForShortId,resolveShardFromShortId } from "./config/shards";
+import cors from "cors";
+import { getSharedClientByIndex, getPrismaClientForShortId, resolveShardFromShortId } from "./config/shards";
 import { connectRedis } from "./config/redis";
+import { apiRouter, redirectRouter } from "./urlController";
+import { register, login } from "./controllers/authController";
 
 
 const app = express();
+app.use(cors());
 app.use(express.json());
+
+// Mount the API router
+app.use("/api", apiRouter);
+
+// Mount the root redirect router
+app.use("/", redirectRouter);
+app.post("/api/auth/register", register)
+app.post("/api/auth/login", login)
 
 app.get("/health", async (_req, res) => {
     const shard0 = getSharedClientByIndex(0);
     const shard1 = getSharedClientByIndex(1);
     await shard0.$queryRaw`SELECT 1`;
     await shard1.$queryRaw`SELECT 1`;
-    res.json({ok: true,shards:2});
+    res.json({ ok: true, shards: 2 });
 });
 
 const port = Number(process.env.PORT) || 3000;
