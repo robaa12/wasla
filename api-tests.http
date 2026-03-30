@@ -1,0 +1,44 @@
+### Wasla API HTTP Requests
+### You can run these directly if you have the "REST Client" extension installed in VS Code.
+
+@baseUrl = http://localhost:3000
+
+### 1. Health Check
+# Ensure the API is running and connected to all Database Shards.
+GET {{baseUrl}}/health
+Accept: application/json
+
+---
+
+### 2. Create a Short URL (Shorten Endpoint)
+# Submits a long URL to generate a short ID, save it to the DB, and cache it in Redis.
+POST {{baseUrl}}/api/shorten
+Content-Type: application/json
+
+{
+  "longUrl": "https://www.youtube.com/"
+}
+
+###
+
+### 3. Create another Short URL
+# Generating a few helps us verify that the shard routing distributes across both DBs.
+POST {{baseUrl}}/api/shorten
+Content-Type: application/json
+
+{
+  "longUrl": "https://www.typescriptlang.org/docs/"
+}
+
+###
+
+### 4. Debug Shard Resolution (Optional)
+# Enter the shortId returned from the requests above to see which DB shard it belongs to
+GET {{baseUrl}}/api/debug/shard/pO8Pe4RI
+Accept: application/json
+
+---
+
+### 5. Redirect Endpoint (Phase 5 - To Be Implemented)
+# Tests the cache-aside pattern and redirect logic once we build the GET /:id route
+GET {{baseUrl}}/cOi4Baei
