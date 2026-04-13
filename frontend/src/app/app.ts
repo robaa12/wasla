@@ -1,8 +1,10 @@
-import { Component, signal, HostListener } from '@angular/core';
+import { Component, signal, HostListener, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 
 import { AppTranslations } from './shared/translations.types';
+import { TranslationService } from './core/translation/translation.service';
 import { NavbarComponent } from './navbar/navbar.component';
 import { HeroComponent } from './hero/hero.component';
 import { StatsComponent } from './stats/stats.component';
@@ -52,6 +54,8 @@ export class App {
       navFeatures: 'Features',
       navHowItWorks: 'How It Works',
       navAnalytics: 'Analytics',
+      navDashboard: 'Dashboard',
+      navSignOut: 'Sign Out',
 
       badge: 'Wasla v1.0 — Now Live',
       headingLine1: 'Shorten Your Links.',
@@ -65,6 +69,9 @@ export class App {
       successTitle: 'Your link is ready!',
       copy: 'Copy',
       copyDone: 'Copied!',
+      trustText: 'No sign-up required  •  Free forever  •  99.99% uptime',
+      platformFeatures: 'Platform Features',
+      simpleProcess: 'Simple Process',
 
       statsLabel1: 'Links Shortened',
       statsValue1: '12M+',
@@ -112,6 +119,77 @@ export class App {
 
       footer: '© 2026 Wasla URL Shortener. All rights reserved.',
       footerTagline: 'Built for speed. Designed for scale.',
+
+      dashTitle: 'My Links',
+      dashSubtitle: 'All your shortened URLs in one place.',
+      dashShortenBtn: 'Shorten New Link',
+      dashSearchPlaceholder: 'Search by URL or short link...',
+      dashSortNewest: 'Newest First',
+      dashSortOldest: 'Oldest First',
+      dashEmptyTitle: 'No links yet',
+      dashEmptyDesc: 'Shorten your first URL and it will appear here.',
+      dashEmptyBtn: 'Shorten a Link',
+      dashNoResultsTitle: 'No results found',
+      dashNoResultsDesc: 'No links match',
+      dashClearSearch: 'Clear Search',
+      dashStats: 'Stats',
+      dashCopy: 'Copy',
+      dashCopied: 'Copied!',
+      dashPrev: 'Prev',
+      dashNext: 'Next',
+      dashResultsFound: 'result(s) found',
+      dashShowingOf: 'Showing',
+      dashLinksTotal: 'link(s) total',
+      dashErrorNoLinks: 'You have no shortened links yet. Start by creating one!',
+      dashErrorLoad: 'Failed to load your links. Please try again.',
+
+      loginTitle: 'Welcome Back',
+      loginSubtitle: 'Sign in to access your dashboard.',
+      registerTitle: 'Create Account',
+      registerSubtitle: 'Join Wasla to manage your shortened links.',
+      loginEmail: 'Email address',
+      loginPassword: 'Password',
+      loginEmailPlaceholder: 'you@example.com',
+      loginPasswordPlaceholder: '••••••••',
+      loginProcessing: 'Processing...',
+      loginSignInBtn: 'Sign In',
+      loginCreateAccountBtn: 'Create Account',
+      loginHaveAccount: 'Already have an account?',
+      loginNoAccount: "Don't have an account?",
+      loginCreateOne: 'Create one',
+      loginSignInToggle: 'Sign In',
+      loginEmailRequired: 'Email is required.',
+      loginEmailInvalid: 'Please enter a valid email.',
+      loginPasswordRequired: 'Password is required.',
+      loginPasswordMinLength: 'Password must be at least 6 characters.',
+      loginFormErrors: 'Please fix the form errors.',
+      loginRegisterFailed: 'Registration failed. Try again.',
+      loginInvalidCredentials: 'Invalid credentials.',
+
+      analyticsTitle: 'Link Analytics',
+      analyticsSubtitle: 'Performance metrics for',
+      analyticsGlobalSubtitle: 'Global Network Overview',
+      analyticsTrafficOverview: 'Traffic Overview',
+      analyticsTotalClicks: 'Total Clicks',
+      analyticsUniqueVisitors: 'Unique Visitors',
+      analyticsTrafficSources: 'Traffic Sources',
+      analyticsTopLinks: 'Top Performing Links',
+      analyticsTopLinksHeader: 'Top Performing Links',
+      analyticsColShortUrl: 'Short URL',
+      analyticsColDestination: 'Destination',
+      analyticsColClicks: 'Clicks',
+      analyticsColUnique: 'Unique',
+      analyticsColCtr: 'CTR',
+      analyticsColStatus: 'Status',
+      analyticsStatusActive: 'Active',
+      analyticsStatusExpired: 'Expired',
+      analyticsShowingLinks: 'Showing links',
+
+      sidebarDashboard: 'Dashboard',
+      sidebarAnalytics: 'Analytics (Pro)',
+      sidebarMyLinks: 'My Links',
+      sidebarCustomDomains: 'Custom Domains',
+      sidebarSettings: 'Settings',
     },
     ar: {
       langToggle: 'English',
@@ -120,6 +198,8 @@ export class App {
       navFeatures: 'المميزات',
       navHowItWorks: 'كيف يعمل',
       navAnalytics: 'التحليلات',
+      navDashboard: 'لوحة التحكم',
+      navSignOut: 'تسجيل الخروج',
 
       badge: 'وصله الإصدار 1.0 — متاح الآن',
       headingLine1: 'قصّر روابطك.',
@@ -133,6 +213,9 @@ export class App {
       successTitle: 'رابطك جاهز!',
       copy: 'نسخ',
       copyDone: 'تم النسخ!',
+      trustText: 'لا يحتاج تسجيل  •  مجاني للأبد  •  99.99% وقت التشغيل',
+      platformFeatures: 'ميزات المنصة',
+      simpleProcess: 'عملية بسيطة',
 
       statsLabel1: 'رابط مختصر',
       statsValue1: '+12M',
@@ -177,21 +260,99 @@ export class App {
 
       footer: '© 2026 وصله لاختصار الروابط. جميع الحقوق محفوظة.',
       footerTagline: 'مبني للسرعة. مصمم للتوسع.',
+
+      dashTitle: 'روابطي',
+      dashSubtitle: 'جميع روابطك المختصرة في مكان واحد.',
+      dashShortenBtn: 'اختصار رابط جديد',
+      dashSearchPlaceholder: 'ابحث بالرابط الطويل أو القصير...',
+      dashSortNewest: 'الأحدث أولاً',
+      dashSortOldest: 'الأقدم أولاً',
+      dashEmptyTitle: 'لا توجد روابط بعد',
+      dashEmptyDesc: 'اختصر رابطك الأول وسيظهر هنا.',
+      dashEmptyBtn: 'اختصر رابطاً',
+      dashNoResultsTitle: 'لم يتم العثور على نتائج',
+      dashNoResultsDesc: 'لا توجد روابط مطابقة لـ',
+      dashClearSearch: 'مسح البحث',
+      dashStats: 'الإحصائيات',
+      dashCopy: 'نسخ',
+      dashCopied: 'تم النسخ!',
+      dashPrev: 'السابق',
+      dashNext: 'التالي',
+      dashResultsFound: 'نتيجة',
+      dashShowingOf: 'عرض',
+      dashLinksTotal: 'رابط',
+      dashErrorNoLinks: 'لا توجد روابط مختصرة بعد. ابدأ بإنشاء واحد!',
+      dashErrorLoad: 'فشل في تحميل روابطك. حاول مرة أخرى.',
+
+      loginTitle: 'مرحباً بعودتك',
+      loginSubtitle: 'سجّل الدخول للوصول إلى لوحة التحكم.',
+      registerTitle: 'إنشاء حساب',
+      registerSubtitle: 'انضم إلى وصله لإدارة روابطك المختصرة.',
+      loginEmail: 'البريد الإلكتروني',
+      loginPassword: 'كلمة المرور',
+      loginEmailPlaceholder: 'you@example.com',
+      loginPasswordPlaceholder: '••••••••',
+      loginProcessing: 'جارٍ المعالجة...',
+      loginSignInBtn: 'تسجيل الدخول',
+      loginCreateAccountBtn: 'إنشاء حساب',
+      loginHaveAccount: 'لديك حساب بالفعل؟',
+      loginNoAccount: 'ليس لديك حساب؟',
+      loginCreateOne: 'أنشئ حساباً',
+      loginSignInToggle: 'تسجيل الدخول',
+      loginEmailRequired: 'البريد الإلكتروني مطلوب.',
+      loginEmailInvalid: 'يرجى إدخال بريد إلكتروني صحيح.',
+      loginPasswordRequired: 'كلمة المرور مطلوبة.',
+      loginPasswordMinLength: 'كلمة المرور يجب أن تكون 6 أحرف على الأقل.',
+      loginFormErrors: 'يرجى تصحيح أخطاء النموذج.',
+      loginRegisterFailed: 'فشل في التسجيل. حاول مرة أخرى.',
+      loginInvalidCredentials: 'بيانات الدخول غير صحيحة.',
+
+      analyticsTitle: 'تحليلات الروابط',
+      analyticsSubtitle: 'مقاييس الأداء لـ',
+      analyticsGlobalSubtitle: 'نظرة عامة على الشبكة العالمية',
+      analyticsTrafficOverview: 'نظرة عامة على الحركة',
+      analyticsTotalClicks: 'إجمالي النقرات',
+      analyticsUniqueVisitors: 'الزوار الفريدون',
+      analyticsTrafficSources: 'مصادر الحركة',
+      analyticsTopLinks: 'أفضل الروابط أداءً',
+      analyticsTopLinksHeader: 'أفضل الروابط أداءً',
+      analyticsColShortUrl: 'الرابط القصير',
+      analyticsColDestination: 'الوجهة',
+      analyticsColClicks: 'النقرات',
+      analyticsColUnique: 'فريد',
+      analyticsColCtr: 'نسبة النقر',
+      analyticsColStatus: 'الحالة',
+      analyticsStatusActive: 'نشط',
+      analyticsStatusExpired: 'منتهي',
+      analyticsShowingLinks: 'عرض الروابط',
+
+      sidebarDashboard: 'لوحة التحكم',
+      sidebarAnalytics: 'التحليلات (برو)',
+      sidebarMyLinks: 'روابطي',
+      sidebarCustomDomains: 'النطاقات المخصصة',
+      sidebarSettings: 'الإعدادات',
     },
   };
 
-  constructor(private http: HttpClient, public router: Router) {
+  constructor(private http: HttpClient, public router: Router, @Inject(PLATFORM_ID) private platformId: Object, private translationService: TranslationService) {
     this.syncDocumentLanguage('en');
-    
-    // Set initial route so direct navigations (like typing localhost:4200/login) work instantly
-    this.currentRoute.set(window.location.pathname);
-    
-    // Listen for all future link clicks
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        this.currentRoute.set(event.urlAfterRedirects.split('?')[0]);
-      }
-    });
+    this.loadTranslations();
+
+    if (isPlatformBrowser(this.platformId)) {
+      // Set initial route so direct navigations (like typing localhost:4200/login) work instantly
+      this.currentRoute.set(window.location.pathname);
+      
+      // Listen for all future link clicks
+      this.router.events.subscribe(event => {
+        if (event instanceof NavigationEnd) {
+          const newRoute = event.urlAfterRedirects.split('?')[0];
+          this.currentRoute.set(newRoute);
+          if (newRoute === '/') {
+            window.scrollTo(0, 0);
+          }
+        }
+      });
+    }
   }
 
   get isArabic(): boolean {
@@ -206,6 +367,12 @@ export class App {
     const next = this.currentLang() === 'en' ? 'ar' : 'en';
     this.currentLang.set(next);
     this.syncDocumentLanguage(next);
+    this.translationService.setTranslations(this.translations[next]);
+  }
+
+  private loadTranslations() {
+    const t = this.translations[this.currentLang()];
+    this.translationService.setTranslations(t);
   }
 
   private syncDocumentLanguage(lang: 'en' | 'ar') {

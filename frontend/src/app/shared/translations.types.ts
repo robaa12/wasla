@@ -5,6 +5,8 @@ export interface AppTranslations {
   navFeatures: string;
   navHowItWorks: string;
   navAnalytics: string;
+  navDashboard: string;
+  navSignOut: string;
 
   badge: string;
   headingLine1: string;
@@ -17,6 +19,9 @@ export interface AppTranslations {
   successTitle: string;
   copy: string;
   copyDone: string;
+  trustText: string;
+  platformFeatures: string;
+  simpleProcess: string;
 
   statsLabel1: string;
   statsValue1: string;
@@ -57,4 +62,79 @@ export interface AppTranslations {
 
   footer: string;
   footerTagline: string;
+
+  // Dashboard
+  dashTitle: string;
+  dashSubtitle: string;
+  dashShortenBtn: string;
+  dashSearchPlaceholder: string;
+  dashSortNewest: string;
+  dashSortOldest: string;
+  dashEmptyTitle: string;
+  dashEmptyDesc: string;
+  dashEmptyBtn: string;
+  dashNoResultsTitle: string;
+  dashNoResultsDesc: string;
+  dashClearSearch: string;
+  dashStats: string;
+  dashCopy: string;
+  dashCopied: string;
+  dashPrev: string;
+  dashNext: string;
+  dashResultsFound: string;
+  dashShowingOf: string;
+  dashLinksTotal: string;
+  dashErrorNoLinks: string;
+  dashErrorLoad: string;
+
+  // Login / Register
+  loginTitle: string;
+  loginSubtitle: string;
+  registerTitle: string;
+  registerSubtitle: string;
+  loginEmail: string;
+  loginPassword: string;
+  loginEmailPlaceholder: string;
+  loginPasswordPlaceholder: string;
+  loginProcessing: string;
+  loginSignInBtn: string;
+  loginCreateAccountBtn: string;
+  loginHaveAccount: string;
+  loginNoAccount: string;
+  loginCreateOne: string;
+  loginSignInToggle: string;
+  loginEmailRequired: string;
+  loginEmailInvalid: string;
+  loginPasswordRequired: string;
+  loginPasswordMinLength: string;
+  loginFormErrors: string;
+  loginRegisterFailed: string;
+  loginInvalidCredentials: string;
+
+  // Analytics
+  analyticsTitle: string;
+  analyticsSubtitle: string;
+  analyticsGlobalSubtitle: string;
+  analyticsTrafficOverview: string;
+  analyticsTotalClicks: string;
+  analyticsUniqueVisitors: string;
+  analyticsTrafficSources: string;
+  analyticsTopLinks: string;
+  analyticsTopLinksHeader: string;
+  analyticsColShortUrl: string;
+  analyticsColDestination: string;
+  analyticsColClicks: string;
+  analyticsColUnique: string;
+  analyticsColCtr: string;
+  analyticsColStatus: string;
+  analyticsStatusActive: string;
+  analyticsStatusExpired: string;
+  analyticsShowingLinks: string;
+
+  // Sidebar
+  sidebarDashboard: string;
+  sidebarAnalytics: string;
+  sidebarMyLinks: string;
+  sidebarCustomDomains: string;
+  sidebarSettings: string;
 }
