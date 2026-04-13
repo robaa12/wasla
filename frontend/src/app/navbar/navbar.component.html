@@ -3,7 +3,7 @@
   <nav class="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4">
 
     <!-- Logo -->
-    <a class="flex cursor-pointer items-center gap-3 group" (click)="sectionScrolled.emit('hero')">
+    <a class="flex cursor-pointer items-center gap-3 group" routerLink="/">
       <img src="/wasla logo with text.png" alt="Wasla logo"
         class="h-32 w-auto object-contain transition-opacity group-hover:opacity-80" />
     </a>
@@ -22,8 +22,8 @@
       <a class="btn-ghost-teal" routerLink="/login">{{ t.login }}</a>
       <a class="btn-primary-amber" routerLink="/register">{{ t.signup }}</a>
       } @else {
-      <a class="btn-ghost-teal" routerLink="/dashboard">Dashboard</a>
-      <button class="btn-primary-amber" (click)="logout()">Sign Out</button>
+      <a class="btn-ghost-teal" routerLink="/dashboard">{{ t.navDashboard }}</a>
+      <button class="btn-primary-amber" (click)="logout()">{{ t.navSignOut }}</button>
       }
     </div>
 
