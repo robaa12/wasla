@@ -9,16 +9,16 @@
         <div class="text-center mb-8">
             <h2 class="text-3xl font-bold bg-gradient-to-r from-teal-400 to-amber-400 bg-clip-text text-transparent">
                 @if (isRegisterMode()) {
-                Create Account
+                {{ t().registerTitle }}
                 } @else {
-                Welcome Back
+                {{ t().loginTitle }}
                 }
             </h2>
             <p class="text-neutral-400 mt-2 text-sm">
                 @if (isRegisterMode()) {
-                Join Wasla to manage your shortened links.
+                {{ t().registerSubtitle }}
                 } @else {
-                Sign in to access your dashboard.
+                {{ t().loginSubtitle }}
                 }
             </p>
         </div>
@@ -31,13 +31,14 @@
         }
 
         <!-- Dual Form (Login / Register) -->
-        <form (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
+        <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
             <div class="form-control">
-                <label class="mb-1.5 block text-sm font-medium text-neutral-300" for="email">Email address</label>
+                <label class="mb-1.5 block text-sm font-medium text-neutral-300" for="email">{{ t().loginEmail }}</label>
                 <div class="relative">
-                    <input id="email" type="email"
+                    <input id="email" type="email" formControlName="email"
                         class="w-full rounded-xl border border-dark-border bg-dark-bg/50 px-4 py-3 pl-11 text-neutral-100 placeholder-neutral-500 outline-none transition-colors focus:border-teal-400/50 focus:bg-dark-bg"
-                        placeholder="you@example.com" [(ngModel)]="email" name="email" required autocomplete="email" />
+                        [class]="emailControl?.touched && emailControl?.invalid ? 'border-red-500/50' : ''"
+                        [placeholder]="t().loginEmailPlaceholder" autocomplete="email" />
                     <!-- Email Icon -->
                     <svg class="absolute left-4 top-3.5 h-5 w-5 text-neutral-500" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -45,15 +46,18 @@
                             d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                     </svg>
                 </div>
+                @if (emailControl?.touched && emailControl?.invalid) {
+                <p class="mt-1.5 text-xs text-red-400">{{ getEmailErrorMessage() }}</p>
+                }
             </div>
 
             <div class="form-control">
-                <label class="mb-1.5 block text-sm font-medium text-neutral-300" for="password">Password</label>
+                <label class="mb-1.5 block text-sm font-medium text-neutral-300" for="password">{{ t().loginPassword }}</label>
                 <div class="relative">
-                    <input id="password" type="password"
+                    <input id="password" type="password" formControlName="password"
                         class="w-full rounded-xl border border-dark-border bg-dark-bg/50 px-4 py-3 pl-11 text-neutral-100 placeholder-neutral-500 outline-none transition-colors focus:border-teal-400/50 focus:bg-dark-bg"
-                        placeholder="••••••••" [(ngModel)]="password" name="password" required
-                        autocomplete="current-password" />
+                        [class]="passwordControl?.touched && passwordControl?.invalid ? 'border-red-500/50' : ''"
+                        [placeholder]="t().loginPasswordPlaceholder" autocomplete="current-password" />
                     <!-- Password Lock Icon -->
                     <svg class="absolute left-4 top-3.5 h-5 w-5 text-neutral-500" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -61,19 +65,22 @@
                             d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
                 </div>
+                @if (passwordControl?.touched && passwordControl?.invalid) {
+                <p class="mt-1.5 text-xs text-red-400">{{ getPasswordErrorMessage() }}</p>
+                }
             </div>
 
             <!-- Submit Button -->
             <button type="submit"
                 class="group relative mt-2 w-full overflow-hidden rounded-xl bg-teal-500 px-4 py-3.5 font-semibold text-white transition-all hover:bg-teal-400 hover:shadow-[0_0_20px_rgba(20,184,166,0.4)] hover:-translate-y-0.5"
-                [disabled]="isLoading()">
+                [disabled]="isLoading() || authForm.invalid">
                 <div class="relative z-10 flex items-center justify-center gap-2">
                     @if (isLoading()) {
                     <!-- Loading Spinner -->
                     <span class="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
-                    Processing...
+                    {{ t().loginProcessing }}
                     } @else {
-                    {{ isRegisterMode() ? 'Create Account' : 'Sign In' }}
+                    {{ isRegisterMode() ? t().loginCreateAccountBtn : t().loginSignInBtn }}
                     <svg class="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -87,15 +94,13 @@
         <!-- State Toggler -->
         <div class="mt-8 text-center text-sm text-neutral-400">
             @if (isRegisterMode()) {
-            Already have an account?
+            {{ t().loginHaveAccount }}
             <button (click)="toggleMode()" type="button"
-                class="font-semibold text-teal-400 transition-colors hover:text-teal-300 hover:underline">Sign
-                In</button>
+                class="font-semibold text-teal-400 transition-colors hover:text-teal-300 hover:underline">{{ t().loginSignInToggle }}</button>
             } @else {
-            Don't have an account?
+            {{ t().loginNoAccount }}
             <button (click)="toggleMode()" type="button"
-                class="font-semibold text-amber-400 transition-colors hover:text-amber-300 hover:underline">Create
-                one</button>
+                class="font-semibold text-amber-400 transition-colors hover:text-amber-300 hover:underline">{{ t().loginCreateOne }}</button>
             }
         </div>
     </div>

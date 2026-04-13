@@ -1,27 +1,36 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Auth } from '../../core/auth/auth';
+import { TranslationService } from '../../core/translation/translation.service';
+import { AppTranslations } from '../../shared/translations.types';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [ReactiveFormsModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login implements OnInit {
   private auth = inject(Auth);
   private router = inject(Router);
+  private fb = inject(FormBuilder);
+  private translationService = inject(TranslationService);
 
-  email = '';
-  password = '';
+  // Reactive computed that updates when language changes
+  t = computed(() => this.translationService.t() || {} as AppTranslations);
+
+  authForm: FormGroup = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+  });
+
   isRegisterMode = signal(false);
   isLoading = signal(false);
   errorMessage = signal('');
 
   ngOnInit() {
-    // Auto-start in register mode when the URL is /register
     if (this.router.url.startsWith('/register')) {
       this.isRegisterMode.set(true);
     }
@@ -31,30 +40,47 @@ export class Login implements OnInit {
     const next = !this.isRegisterMode();
     this.isRegisterMode.set(next);
     this.errorMessage.set('');
-    // Keep the URL in sync with the mode
+    this.authForm.reset();
     this.router.navigate([next ? '/register' : '/login']);
   }
 
+  get emailControl() { return this.authForm.get('email'); }
+  get passwordControl() { return this.authForm.get('password'); }
+
+  getEmailErrorMessage(): string {
+    if (this.emailControl?.hasError('required')) return this.t().loginEmailRequired;
+    if (this.emailControl?.hasError('email')) return this.t().loginEmailInvalid;
+    return '';
+  }
+
+  getPasswordErrorMessage(): string {
+    if (this.passwordControl?.hasError('required')) return this.t().loginPasswordRequired;
+    if (this.passwordControl?.hasError('minlength')) return this.t().loginPasswordMinLength;
+    return '';
+  }
+
   async onSubmit() {
-    if (!this.email || !this.password) {
-      this.errorMessage.set('Please fill out all fields.');
+    if (this.authForm.invalid) {
+      this.authForm.markAllAsTouched();
+      this.errorMessage.set(this.t().loginFormErrors);
       return;
     }
 
     this.isLoading.set(true);
     this.errorMessage.set('');
 
+    const { email, password } = this.authForm.value;
+
     try {
       if (this.isRegisterMode()) {
-        await this.auth.register(this.email, this.password);
+        await this.auth.register(email!, password!);
       } else {
-        await this.auth.login(this.email, this.password);
+        await this.auth.login(email!, password!);
       }
-      
-      // On success, navigate to the landing page (which will soon become the dashboard!)
+
       this.router.navigate(['/']);
     } catch (err: any) {
-      this.errorMessage.set(this.isRegisterMode() ? 'Registration failed. Try again.' : 'Invalid credentials.');
+      this.errorMessage.set(this.isRegisterMode() ? this.t().loginRegisterFailed : this.t().loginInvalidCredentials);
     } finally {
       this.isLoading.set(false);
     }
