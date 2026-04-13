@@ -1,0 +1,64 @@
+<div class="min-h-screen bg-[var(--bg-base)] text-text-primary">
+
+  <main class="w-full p-8 transition-all animate-fade-in pt-24">
+    <div class="max-w-6xl mx-auto">
+
+      <!-- HEADER -->
+      <header class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4">
+        <div class="flex flex-col gap-2">
+          <h1 class="text-3xl font-ui font-medium tracking-tight text-white">
+            {{ t().analyticsTitle }}
+          </h1>
+          <p class="text-text-muted text-sm font-ui">
+            {{ linkId() ? 'Performance metrics for lnk.sh/' + linkId() : t().analyticsGlobalSubtitle }}
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          @for (range of ['7D', '30D', '90D', '1Y']; track range) {
+            <button (click)="setDateRange(range)"
+                    [class]="dateRange() === range ? 'bg-[var(--accent)] text-black' : 'bg-[var(--bg-card)] text-text-muted hover:text-white'"
+                    class="px-4 py-2 rounded-lg text-sm font-ui transition-all border border-[var(--border)]">
+              {{ range }}
+            </button>
+          }
+        </div>
+      </header>
+
+      @if (!isLoaded()) {
+        <!-- Skeleton Loading -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 animate-pulse">
+          @for (i of [1,2,3,4]; track i) {
+            <div class="h-[140px] bg-[var(--bg-card)] rounded-xl border border-[var(--border)]"></div>
+          }
+        </div>
+        <div class="h-[400px] bg-[var(--bg-card)] rounded-xl border border-[var(--border)] animate-pulse"></div>
+      }
+
+      @if (isLoaded()) {
+        <div class="space-y-8">
+          <!-- KPI Stats -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            @for (kpi of kpis(); track kpi.label) {
+              <app-kpi-card
+                [label]="kpi.label"
+                [value]="kpi.value"
+                [delta]="kpi.delta"
+                [deltaDirection]="kpi.deltaDirection"
+                [sparkline]="kpi.sparkline"
+                [prefix]="kpi.prefix"
+                [suffix]="kpi.suffix">
+              </app-kpi-card>
+            }
+          </div>
+
+          <!-- Click Trend Chart -->
+          <div class="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] p-6">
+            <h2 class="text-xl font-ui font-medium text-white mb-6">{{ t().analyticsTrafficOverview }}</h2>
+            <app-click-trend-chart [data]="clickTrend()"></app-click-trend-chart>
+          </div>
+        </div>
+      }
+    </div>
+  </main>
+</div>
